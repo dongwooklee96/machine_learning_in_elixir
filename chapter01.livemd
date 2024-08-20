@@ -1,0 +1,40 @@
+# chapter01
+
+```elixir
+Mix.install([
+  {:axon, "~> 0.5"},
+  {:nx, "~> 0.5"},
+  {:explorer, "~> 0.5"},
+  {:kino, "~> 0.8"}
+])
+```
+
+## Section
+
+```elixir
+require Explorer.DataFrame, as: DF
+
+iris = Explorer.Datasets.iris()
+
+cols = ~w(sepal_width sepal_length petal_length petal_width)
+
+normalized_iris =
+  DF.mutate(
+    iris,
+    for col <- across(^cols) do
+      {col.name, (col - mean(col)) / standard_deviation(col)}
+    end
+  )
+
+normalized_iris =
+  DF.mutate(normalized_iris,
+    species: Explorer.Series.cast(species, :category)
+  )
+
+shuffled_normalized_iris = DF.shuffle(normalized_iris)
+```
+
+```elixir
+train_df = DF.slice(shuffled_normalized_iris, 0..119)
+test_df = DF.slice(shuffled_normalized_iris, 120..149)
+```
