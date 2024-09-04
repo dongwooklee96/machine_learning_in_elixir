@@ -1,0 +1,39 @@
+# 챕터 7장
+
+```elixir
+Mix.install([
+  {:axon, "~> 0.5"},
+  {:nx, "~> 0.5"},
+  {:exla, "~> 0.5"},
+  {:stb_image, "~> 0.6"},
+  {:kino, "~> 0.8"}
+])
+
+Nx.global_default_backend(EXLA.Backend)
+```
+
+## Section
+
+```elixir
+defmodule CatsAndDogs do
+  def pipeline(paths) do
+    paths
+    |> Enum.shuffle()
+  end
+
+  defp parse_image(path) do
+    label = if String.contains?(path, "cat"), do: 0, else: 1
+
+    case StbImage.read_file(path) do
+      {:ok, img} -> {img, label}
+      _error -> :error
+    end
+  end
+end
+```
+
+```elixir
+train_path = Path.wildcard("train/*.jpg")
+
+
+```
